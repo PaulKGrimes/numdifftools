@@ -16,6 +16,10 @@ The user can configure many options like; changing the order of the method or
 the extrapolation, even allowing the user to specify whether complex-step,
 central, forward or backward differences are used.
 
+This fork exists to fix a low level bug in the limits module that causes differentiation of
+complex valued functions to fail, due to the handling of outliers with Numpy's percentile/nanpercentile
+functions.
+
 The methods provided are:
 
 - **Derivative**: Compute the derivatives of order 1 through 10 on any scalar function.
