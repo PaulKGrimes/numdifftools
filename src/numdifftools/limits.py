@@ -163,6 +163,10 @@ class _Limit(object):
         direction is probably wild enough here. The actual
         trimming factor is defined as a parameter.
         """
+        # Take the bigger of the real or imaginary der to process.
+        if der.dtype.kind == 'c':
+            der = np.where(np.abs(der.real) > np.abs(der.imag), der.real, der.imag)
+            
         try:
             if np.any(np.isnan(der)):
                 p25, median, p75 = np.nanpercentile(der, [25,50, 75], axis=0) 
@@ -175,7 +179,7 @@ class _Limit(object):
             return 0 * der
 
         a_median = np.abs(median)
-        outliers = (((abs(der) < (a_median / trim_fact)) +
+        outliers = (((np.abs(der) < (a_median / trim_fact)) +
                     (abs(der) > (a_median * trim_fact))) * (a_median > 1e-8) +
                     ((der < p25 - 1.5 * iqr) + (p75 + 1.5 * iqr < der)))
         errors = outliers * np.abs(der - median)
